@@ -88,8 +88,8 @@ export default class Dashboard extends Component {
           {
             arr.map(a1 =>
               <div className='form-check form-check-inline'>
-                <input className="form-check-input" type="radio" name={name} id="inlineRadio1" checked={selValue === a1} value={a1} />
-                <label className="form-check-label" for="inlineRadio1">{a1}</label>
+                <input className="form-check-input" type="radio" name={name} id={name} />
+                <label className="form-check-label" for={name}>{a1}</label>
               </div>
             )
           }
