@@ -20,29 +20,44 @@ app.listen(PORT, () => console.log(`Listening on port http://localhost:${PORT}`)
 
 app.post('/myserver', async (req, res) => {
   let { method, fetchURL, body, headerKey1, headerKey2, headerKey3, headerValue1, headerValue2, headerValue3 } = req.body;
-  let opt = (headerKey1 || headerKey2 || headerKey3) && { headers: { [headerKey1 || headerKey2 || headerKey3]: +(headerValue1 || headerValue2 || headerValue3) } }
-  
+  // let opt = (headerKey1 || headerKey2 || headerKey3) && { headers: { [headerKey1 || headerKey2 || headerKey3]: +(headerValue1 || headerValue2 || headerValue3) } }
+
+  let axiosConfig = {};
+  let headers = {};
+
+  if (headerKey1 && headerValue1) {
+    headers[headerKey1] = headerValue1;
+  }
+
+  if (headerKey2 && headerValue2) {
+    headers[headerKey2] = headerValue2;
+  }
+
+  if (headerKey3 && headerValue3) {
+    headers[headerKey3] = headerValue3;
+  }
+
+  if (Object.keys(headers).length > 0) {
+    axiosConfig.headers = headers;
+  }
+
   console.log(opt);
   let reqBody = body && JSON.parse(body);
   try {
     if (method === 'GET') {
-      let response = await axios.get(fetchURL, opt)
+      let response = await axios.get(fetchURL, axiosConfig)
       return res.status(200).send(JSON.stringify(response.data))
-      // return res.status(200).send(response.data)
     }
     if (method === 'POST') {
-      let response = await axios.post(fetchURL, reqBody, opt)
-      // return res.status(200).send(response.data)
-      return res.status(200).send(JSON.stringify(response.data))
+      let response = await axios.post(fetchURL, reqBody, axiosConfig)
+      return res.status(201).send(JSON.stringify(response.data))
     }
     if (method === 'PUT') {
-      let response = await axios.put(fetchURL, reqBody, opt)
-      // return res.status(200).send(response.data)
+      let response = await axios.put(fetchURL, reqBody, axiosConfig)
       return res.status(200).send(JSON.stringify(response.data))
     }
     if (method === 'DELETE') {
-      let response = await axios.delete(fetchURL, opt)
-      // return res.status(200).send(response.data)
+      let response = await axios.delete(fetchURL, axiosConfig)
       return res.status(200).send(JSON.stringify(response.data))
     }
   } catch (error) {
